@@ -9,6 +9,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 responses = []
+question_number = 0
 
 @app.get('/')
 def show_survey_start():
@@ -32,10 +33,27 @@ def show_question(question_number):
 
     question = survey.questions[question_number]
 
+
     return render_template(
         'question.html',
         question=question
     )
+
+@app.post('/answer')
+def handle_answer():
+    '''appends user answer to response list'''
+
+    responses.append(request.form)
+
+    if len(responses) == len(survey.questions):
+        return redirect('/begin')
+    else:
+        return redirect(f'/questions/{len(responses)}')
+
+
+
+
+
 
 
 
