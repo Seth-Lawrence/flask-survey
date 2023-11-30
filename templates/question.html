@@ -1,20 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <h1>{{ question.prompt }}</h1>
+<h1>{{ question.prompt }}</h1>
 
-  <form action="/answer" method="POST">
+<form action="/answer" method="POST">
 
-      <!-- you should have one item like this for every choice -->
-      <p>
-        <input
-            type="radio"
-            name="answer"
-            value="value-goes-here">
-        choice-goes-here
-      </p>
+  <!-- you should have one item like this for every choice -->
+  {% for choice in question.choices %}
+    <p>
+      <!-- TODO: potentially could make into if else -->
+      {% if not question.allow_text %}
+        <input type="radio" name="{{ choice }}" value="{{ choice }}">
+      {% endif %}
+      {% if question.allow_text %}
+        <input type="text" name="{{ choice }}" value="{{ choice }}">
+      {% endif %}
+      {{ choice }}
+    </p>
+  {% endfor %}
 
-    <button>Continue</button>
-  </form>
+  <button>Continue</button>
+</form>
 
 {% endblock %}
