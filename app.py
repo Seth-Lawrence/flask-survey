@@ -9,11 +9,12 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
 
-responses = []
+# responses = []
 
 @app.get('/')
 def show_survey_start():
     '''show initial instructions and button to start survey'''
+
 
     return render_template(
         "survey_start.html",
@@ -25,7 +26,7 @@ def show_survey_start():
 def begin_survey():
     '''post for when user clicks on button to start'''
 
-    responses.clear()
+    session["responses"] = []
 
     return redirect('/questions/0')
 
@@ -45,7 +46,10 @@ def show_question(question_number):
 def handle_answer(question_number):
     '''appends user answer to response list'''
 
-    responses.append(list(request.form)[0])
+    responses = session["responses"]
+    responses.append(request.form["choice"])
+    session["responses"] = responses
+
     next_question = question_number + 1
 
     if next_question < len(survey.questions):
@@ -60,7 +64,7 @@ def survey_completion():
     return render_template(
         "completion.html",
         questions=survey.questions,
-        responses=responses
+        responses=session["responses"]
     )
 
 
