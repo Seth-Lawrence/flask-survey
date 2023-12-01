@@ -3,12 +3,11 @@
 
 <h1>{{ question.prompt }}</h1>
 
-<form action="/answer" method="POST">
+<form action="/answer/{{ question_number }}" method="POST">
 
   <!-- you should have one item like this for every choice -->
   {% for choice in question.choices %}
     <p>
-      <!-- TODO: potentially could make into if else -->
       {% if not question.allow_text %}
         <input type="radio" name="{{ choice }}" value="{{ choice }}">
       {% endif %}
