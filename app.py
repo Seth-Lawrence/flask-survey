@@ -15,7 +15,6 @@ debug = DebugToolbarExtension(app)
 def show_survey_start():
     '''show initial instructions and button to start survey'''
 
-
     return render_template(
         "survey_start.html",
         title=survey.title,
@@ -27,42 +26,38 @@ def begin_survey():
     '''post for when user clicks on button to start'''
 
     session["responses"] = []
-    session['question_number'] = 0
-    session['survey_complete'] = False
 
-    return redirect('/questions/0')
+    return redirect('/question')
 
-@app.get('/questions/<int:question_number>')
-def show_question(question_number):
+@app.get('/question')
+def show_question():
     '''show question for survey, input question number to show'''
 
-    if session['survey_complete']:
+    if len(session["responses"]) == len(survey.questions):
         return redirect('/thank-you')
 
-    if question_number != session['question_number']:
-        return redirect(f"/questions/{session['question_number']}")
+    next_question = len(session["responses"])
 
-    question = survey.questions[question_number]
+    question = survey.questions[next_question]
 
     return render_template(
         'question.html',
         question=question,
-        question_number=question_number
+        question_number=next_question
     )
 
-@app.post('/answer/<int:question_number>')
-def handle_answer(question_number):
+@app.post('/answer')
+def handle_answer():
     '''appends user answer to response list'''
 
     responses = session["responses"]
     responses.append(request.form["choice"])
     session["responses"] = responses
 
-    next_question = question_number + 1
-    session['question_number'] += 1
+    next_question = len(session["responses"])
 
     if next_question < len(survey.questions):
-        return redirect(f'/questions/{next_question}')
+        return redirect('/question')
 
     else:
         return redirect('/thank-you')
@@ -71,15 +66,8 @@ def handle_answer(question_number):
 def survey_completion():
     '''showing thank-you screen with thank you results'''
 
-    session['survey_complete'] = True
-
     return render_template(
         "completion.html",
         questions=survey.questions,
         responses=session["responses"]
     )
-
-
-
-
-
