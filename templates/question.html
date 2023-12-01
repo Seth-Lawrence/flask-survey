@@ -10,8 +10,7 @@
     <p>
       {% if not question.allow_text %}
         <input type="radio" name="{{ choice }}" value="{{ choice }}">
-      {% endif %}
-      {% if question.allow_text %}
+      {% else %}
         <input type="text" name="{{ choice }}" value="{{ choice }}">
       {% endif %}
       {{ choice }}

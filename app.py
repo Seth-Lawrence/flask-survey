@@ -18,7 +18,7 @@ def show_survey_start():
         "survey_start.html",
         title=survey.title,
         instructions=survey.instructions
-        )
+    )
 
 @app.post('/begin')
 def begin_survey():
@@ -55,12 +55,12 @@ def handle_answer(question_number):
 
 @app.get('/thank-you')
 def survey_completion():
-
+    '''showing thank-you screen with thank you results'''
     return render_template(
         "completion.html",
         questions=survey.questions,
         responses=responses
-        )
+    )
 
 
 
